@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>QGO — Cue-based production platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:#0a0b0e; --surface:#111319; --surface-2:#161922; --rail:#0c0e13;
+    --line:rgba(255,255,255,0.065); --line-strong:rgba(255,255,255,0.12); --grid:rgba(255,255,255,0.045);
+    --text:#eceef3; --text-2:#99a0ad; --text-3:#5d6470;
+    --go:#2fe08a; --go-dim:rgba(47,224,138,0.13); --go-cell:rgba(47,224,138,0.16); --go-line:rgba(47,224,138,0.4);
+    --dev:#f3b13f; --dev-dim:rgba(243,177,63,0.12);
+    --tcoff:#eb4b50; --tcoff-bg:rgba(235,75,80,0.10); --np:#3d7bff;
+    --cmd:#7fd0ff;
+    --font-display:'Archivo',sans-serif; --font-body:'IBM Plex Sans',sans-serif; --font-mono:'IBM Plex Mono',monospace;
+    --maxw:1180px; --ease:cubic-bezier(0.22,1,0.36,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;position:relative}
+  body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:64px 64px;-webkit-mask-image:radial-gradient(ellipse 90% 65% at 50% 0%,#000 0%,transparent 75%);mask-image:radial-gradient(ellipse 90% 65% at 50% 0%,#000 0%,transparent 75%);opacity:.5;pointer-events:none;z-index:0}
+  body::after{content:"";position:fixed;top:-22%;left:50%;width:900px;height:900px;transform:translateX(-50%);background:radial-gradient(circle,var(--go-dim) 0%,transparent 60%);filter:blur(40px);pointer-events:none;z-index:0}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 32px;position:relative;z-index:1}
+  a{color:inherit}
+  .mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+  .eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--go);display:inline-flex;align-items:center;gap:9px}
+  .eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--go);box-shadow:0 0 10px var(--go)}
+
+  /* status badges */
+  .status{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line-strong);border-radius:5px;padding:3px 9px;white-space:nowrap}
+  .status::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--text-3)}
+  .status.now{color:var(--go);border-color:var(--go-line)} .status.now::before{background:var(--go);box-shadow:0 0 7px var(--go)}
+  .status.dev{color:var(--dev);border-color:rgba(243,177,63,.45)} .status.dev::before{background:var(--dev);box-shadow:0 0 7px var(--dev)}
+  .status.soon{color:var(--text-3)} .status.soon::before{background:var(--text-3)}
+
+  /* header */
+  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(10,11,14,.8);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:70px;gap:18px}
+  .brand{font-family:var(--font-display);font-weight:900;font-size:21px;letter-spacing:-.01em;color:var(--text);display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none;flex-shrink:0}
+  .brand .dot{width:8px;height:8px;border-radius:50%;background:var(--go);box-shadow:0 0 12px var(--go);animation:pulse 2.6s var(--ease) infinite}
+  .brand .pre{font-family:var(--font-mono);font-size:9px;letter-spacing:.16em;color:var(--dev);border:1px solid rgba(243,177,63,.4);border-radius:4px;padding:2px 6px;text-transform:uppercase;margin-left:4px}
+  @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 12px var(--go)}50%{opacity:.5;box-shadow:0 0 4px var(--go)}}
+  .tabs{display:flex;gap:3px;list-style:none;overflow-x:auto}
+  .tab{font-family:var(--font-body);font-size:13.5px;font-weight:500;color:var(--text-2);text-decoration:none;padding:8px 13px;border-radius:7px;white-space:nowrap;transition:all .18s var(--ease);position:relative;cursor:pointer;background:transparent;border:1px solid transparent}
+  .tab:hover{color:var(--text);background:var(--surface)}
+  .tab.active{color:var(--text);background:var(--surface);border-color:var(--line-strong)}
+  .tab.active::after{content:"";position:absolute;left:13px;right:13px;bottom:4px;height:2px;background:var(--go);border-radius:2px;box-shadow:0 0 8px var(--go)}
+
+  .page{display:none}
+  .page.active{display:block;animation:pageIn .5s var(--ease)}
+  @keyframes pageIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  section{padding:88px 0;position:relative}
+  section.first{padding-top:92px}
+  .divider{border-top:1px solid var(--line)}
+  .sec-head{max-width:660px;margin-bottom:48px}
+  .sec-head h3{font-family:var(--font-display);font-weight:800;font-size:clamp(30px,5vw,46px);letter-spacing:-.03em;line-height:1.06;margin:14px 0 0}
+  .sec-head .row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:16px}
+  .sec-head p{color:var(--text-2);font-size:16px;margin-top:16px}
+
+  /* hero */
+  .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+  .hero h1{font-family:var(--font-display);font-weight:900;font-size:clamp(80px,14vw,168px);line-height:.82;letter-spacing:-.04em;margin:22px 0 4px;background:linear-gradient(180deg,#fff 0%,#b9bdc7 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .hero h2{font-family:var(--font-display);font-weight:700;font-size:clamp(23px,3.2vw,32px);line-height:1.12;letter-spacing:-.02em;margin:24px 0 18px}
+  .hero h2 .muted{color:var(--text-3)}
+  .hero p.lede{color:var(--text-2);font-size:17px;max-width:520px;margin-bottom:26px}
+  .badge{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:12px;letter-spacing:.04em;color:var(--text-2);border:1px solid var(--line-strong);border-radius:6px;padding:8px 14px;margin-bottom:30px;background:var(--surface)}
+  .badge b{color:var(--text);font-weight:600} .badge .tick{color:var(--go)}
+  .btn-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+  .btn{font-family:var(--font-body);font-size:14.5px;font-weight:600;padding:14px 26px;border-radius:8px;text-decoration:none;cursor:pointer;border:1px solid transparent;transition:all .2s var(--ease);display:inline-flex;align-items:center;gap:9px}
+  .btn-go{background:var(--go);color:#06140d}
+  .btn-go:hover{box-shadow:0 8px 30px -8px var(--go);transform:translateY(-1px)}
+  .btn-go::before{content:"";width:8px;height:8px;border-radius:50%;background:#06140d}
+  .btn-ghost{background:transparent;color:var(--text-2);border-color:var(--line-strong)}
+  .btn-ghost:hover{color:var(--text);border-color:var(--text-3);background:var(--surface)}
+  .tc-chip{font-family:var(--font-mono);font-size:13px;color:var(--go);border:1px solid var(--go-line);border-radius:6px;padding:8px 12px;letter-spacing:.04em;background:var(--go-dim)}
+
+  /* app window / cue table */
+  .appwin{border:1px solid var(--line-strong);border-radius:12px;overflow:hidden;background:var(--bg);box-shadow:0 40px 90px -50px rgba(0,0,0,.9)}
+  .appbar{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--line);background:var(--surface)}
+  .tl{display:flex;gap:7px}.tl i{width:11px;height:11px;border-radius:50%;display:block}.tl .r{background:#ff5f57}.tl .y{background:#febc2e}.tl .g{background:#28c840}
+  .appbar .ttl{font-family:var(--font-mono);font-size:12px;color:var(--text-2)}.appbar .ttl b{color:var(--text);font-weight:600}
+  .appbar .eos{margin-left:auto;font-family:var(--font-mono);font-size:11px;color:var(--text-3);display:inline-flex;align-items:center;gap:7px}
+  .appbar .eos .lamp{width:9px;height:9px;border-radius:50%;background:#6b7280}
+  .info{display:flex;align-items:center;padding:7px 14px;border-bottom:1px solid var(--line);background:var(--surface);font-family:var(--font-mono);font-size:11.5px;color:var(--text-3);gap:14px}
+  .info .l b{color:var(--text)}.info .c{flex:1;text-align:center}.info .rt{color:var(--text)}.info .rt b{color:var(--text)}
+  .tscroll{overflow-x:auto}
+  table.cues{border-collapse:collapse;width:100%;min-width:920px;table-layout:fixed}
+  col.cn{width:42px}col.cc{width:74px}col.cnm{width:210px}col.cnt{width:180px}col.cf{width:56px}col.cd{width:56px}col.ccm{width:180px}col.ct{width:112px}col.cto{width:38px}
+  table.cues th{font-family:var(--font-mono);font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);text-align:left;padding:9px 11px;background:var(--surface-2);border-bottom:2px solid var(--line-strong);border-right:1px solid var(--grid);white-space:nowrap}
+  table.cues th.n{background:var(--rail);text-align:center;border-right:2px solid var(--line-strong)}
+  table.cues th:last-child{border-right:none}
+  table.cues td{height:30px;padding:0 11px;border-bottom:1px solid var(--grid);border-right:1px solid var(--grid);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--surface)}
+  table.cues td:last-child{border-right:none}
+  td.n{background:var(--rail);text-align:center;font-family:var(--font-mono);font-size:11px;color:var(--text-3);border-right:2px solid var(--line-strong)}
+  td.c{font-family:var(--font-mono);color:var(--text)}td.nm{color:var(--text)}td.nt{color:var(--text)}
+  td.f,td.d{font-family:var(--font-mono);color:var(--text)}td.cm{font-family:var(--font-mono);font-size:12px;color:var(--text)}
+  td.t{font-family:var(--font-mono);color:var(--text)}td.to{font-family:var(--font-mono);text-align:center}
+  td.cue-ind{padding-left:24px}
+  .cue-tri{color:var(--text-3);font-size:9px;margin-right:5px}
+  tr.tcen td.c{} tr.tcoff td:not(.n){background:var(--tcoff-bg)}tr.tcoff td.c{color:var(--tcoff)}
+  tr.rowfocus td:not(.n){background:rgba(255,255,255,.05);box-shadow:inset 0 2px 0 var(--go),inset 0 -2px 0 var(--go)}
+  tr.rowfocus td.c{box-shadow:inset 2px 2px 0 var(--go),inset 0 -2px 0 var(--go)}
+  tr.rowfocus td.to{box-shadow:inset -2px 2px 0 var(--go),inset 0 -2px 0 var(--go)}
+  td.rect{background:rgba(255,255,255,.05)!important}
+  td.rect.act{box-shadow:inset 0 0 0 2px var(--go)}
+  tr.np td:not(.n){background:color-mix(in srgb,var(--np) 18%,var(--surface))!important}
+
+  /* dock teaser */
+  .dock{border-top:1px solid var(--line)}
+  .dock-body{background:#0b0d12;padding:14px;min-height:140px}
+  .chat-meta{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);margin-bottom:10px;display:flex;gap:7px;align-items:center}
+  .chat-meta .ag{border:1px solid var(--line-strong);border-radius:4px;padding:1px 7px;color:var(--text-2)}
+  .msg{font-size:13px;line-height:1.45;margin:7px 0;max-width:82%}
+  .msg.u{color:var(--text);margin-left:auto;text-align:right}
+  .msg.a{color:var(--text-2)}.msg.a b{color:var(--text)}
+  .msg .act{display:inline-block;margin-top:5px;font-family:var(--font-mono);font-size:10.5px;color:var(--go);border:1px solid var(--go-line);border-radius:5px;padding:2px 8px}
+  .dtabs{display:flex;align-items:center;gap:2px;padding:6px 10px;border-top:1px solid var(--line);background:var(--surface)}
+  .dtab{font-family:var(--font-mono);font-size:11.5px;color:var(--text-3);padding:5px 12px;border-radius:6px;display:inline-flex;align-items:center;gap:7px}
+  .dtab .dt{width:6px;height:6px;border-radius:50%;background:var(--text-3)}
+  .dtab.on{color:var(--text);background:var(--surface-2);box-shadow:inset 0 -2px 0 var(--go)}.dtab.on .dt{background:var(--go);box-shadow:0 0 6px var(--go)}
+  .cmd{display:flex;align-items:center;gap:10px;padding:9px 14px;border-top:1px solid var(--line);background:var(--surface);font-family:var(--font-mono);font-size:12.5px}
+  .cmd .p{color:var(--go);font-weight:600}.cmd .fld{flex:1;color:var(--text)}
+  .cmd .mode{display:inline-flex;border:1px solid var(--line-strong);border-radius:6px;overflow:hidden}
+  .cmd .mode span{font-size:10px;letter-spacing:.08em;padding:3px 8px;color:var(--text-3)}.cmd .mode .on{background:var(--go);color:#06140d;font-weight:600}
+  .cmd .ccar{display:inline-block;width:1.5px;height:14px;background:var(--go);vertical-align:-2px;animation:blink 1.05s steps(1) infinite}
+  .cmd .send{font-size:11px;font-weight:600;color:#06140d;background:var(--go);padding:5px 13px;border-radius:6px;font-family:var(--font-body)}
+  @keyframes blink{50%{opacity:0}}
+
+  /* feature / cards grids */
+  .feat-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:48px}
+  .feat{background:var(--surface);padding:28px 26px}
+  .feat .fn{font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;color:var(--go);text-transform:uppercase}
+  .feat h5{font-family:var(--font-display);font-weight:700;font-size:20px;letter-spacing:-.01em;margin:14px 0 8px}
+  .feat p{color:var(--text-2);font-size:14px}
+  .cardgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .fcard{background:var(--surface);padding:28px 26px}
+  .fcard h4{font-family:var(--font-display);font-weight:700;font-size:21px;letter-spacing:-.01em;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .fcard p{color:var(--text-2);font-size:14.5px}
+  .fcard ul{list-style:none;margin-top:14px}
+  .fcard li{font-family:var(--font-mono);font-size:12.5px;color:var(--text-2);padding:6px 0;border-bottom:1px solid var(--line);display:flex;gap:10px}
+  .fcard li:last-child{border-bottom:none}.fcard li::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--go);flex-shrink:0;margin-top:7px}
+
+  /* modules */
+  .modules-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .module{background:var(--surface);padding:28px;position:relative;transition:background .25s var(--ease);overflow:hidden;cursor:pointer;text-decoration:none;display:block}
+  .module::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--go);transform:scaleY(0);transform-origin:top;transition:transform .3s var(--ease)}
+  .module:hover{background:var(--surface-2)}.module:hover::before{transform:scaleY(1)}
+  .module .mt{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px}
+  .module .qn{font-family:var(--font-mono);font-size:13px;color:var(--go)}
+  .module h4{font-family:var(--font-display);font-weight:700;font-size:26px;letter-spacing:-.02em;margin-bottom:8px}
+  .module p{color:var(--text-2);font-size:14.5px;max-width:32ch}
+  .module .arrow{margin-top:18px;font-family:var(--font-mono);font-size:12px;color:var(--text-3);display:inline-flex;align-items:center;gap:7px}
+  .module:hover .arrow{color:var(--go)}
+
+  /* platform */
+  .platform-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+  .platform-copy p{color:var(--text-2);font-size:16.5px;max-width:46ch}
+  .platform-note{margin-top:24px;font-family:var(--font-mono);font-size:12.5px;color:var(--text-3);border-left:2px solid var(--go-line);padding-left:16px;line-height:1.7}
+  .platform-note b{color:var(--text);font-weight:600}
+  .stack{display:flex;flex-direction:column;gap:14px}
+  .layer{border:1px solid var(--line-strong);border-radius:12px;padding:22px 24px;background:var(--surface)}
+  .layer .lt{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-3);margin-bottom:10px}
+  .layer .ln{font-family:var(--font-display);font-weight:800;font-size:22px;letter-spacing:-.01em;display:flex;align-items:center;gap:11px}
+  .layer .ls{color:var(--text-2);font-size:13.5px;margin-top:8px}
+  .layer-app{background:linear-gradient(180deg,var(--surface-2),var(--surface));border-color:var(--go-line)}
+  .layer-app .ln .dot{width:9px;height:9px;border-radius:50%;background:var(--go);box-shadow:0 0 12px var(--go)}.layer-app .lt{color:var(--go)}
+  .connector{display:flex;align-items:center;gap:12px;padding-left:24px;font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3)}
+  .connector .line{width:1px;height:20px;background:var(--line-strong)}
+  .layer-platform{background:linear-gradient(180deg,var(--surface),#0c0e12)}.layer-platform .ls{font-family:var(--font-mono);font-size:12px}
+
+  /* integrations */
+  .int-cat{margin-bottom:40px}
+  .int-cat .ch{display:flex;align-items:baseline;gap:14px;margin-bottom:18px}
+  .int-cat .ch h4{font-family:var(--font-display);font-weight:700;font-size:20px;letter-spacing:-.01em}
+  .int-cat .ch .cn{font-family:var(--font-mono);font-size:11px;color:var(--text-3);letter-spacing:.12em}
+  .tags{display:flex;flex-wrap:wrap;gap:12px}
+  .tag{font-family:var(--font-mono);font-size:13px;color:var(--text-2);border:1px solid var(--line-strong);border-radius:7px;padding:11px 18px;background:var(--surface);transition:all .2s var(--ease);display:inline-flex;align-items:center;gap:9px}
+  .tag::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--text-3);transition:all .2s var(--ease)}
+  .tag:hover{color:var(--text);border-color:var(--dev);background:var(--dev-dim)}.tag:hover::before{background:var(--dev);box-shadow:0 0 8px var(--dev)}
+
+  /* contact */
+  .contact-box{border:1px solid var(--line-strong);border-radius:16px;background:linear-gradient(180deg,var(--surface-2),var(--surface));padding:56px 48px;text-align:center}
+  .contact-box h3{font-family:var(--font-display);font-weight:800;font-size:clamp(30px,5vw,46px);letter-spacing:-.03em;margin-bottom:16px}
+  .contact-box p{color:var(--text-2);font-size:16px;max-width:46ch;margin:0 auto 30px}
+  .contact-box .mail{font-family:var(--font-mono);color:var(--go);font-size:15px;text-decoration:none}
+
+  /* back link */
+  .back{font-family:var(--font-mono);font-size:12px;color:var(--text-3);text-decoration:none;display:inline-flex;align-items:center;gap:8px;cursor:pointer;transition:color .2s var(--ease)}
+  .back:hover{color:var(--go)}
+
+  /* footer + legend */
+  footer{border-top:1px solid var(--line);padding:64px 0 56px}
+  .footer-grid{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:30px}
+  .footer-brand{font-family:var(--font-display);font-weight:900;font-size:clamp(38px,7vw,76px);letter-spacing:-.03em;line-height:.9}
+  .footer-brand span{color:var(--text-3)}
+  .footer-tag{font-family:var(--font-mono);font-size:14px;letter-spacing:.22em;text-transform:uppercase;color:var(--go);display:flex;align-items:center;gap:12px}.footer-tag .seq{color:var(--text-3)}
+  .legend{margin-top:38px;padding-top:24px;border-top:1px solid var(--line);display:flex;gap:26px;flex-wrap:wrap;align-items:center}
+  .legend .lk{font-family:var(--font-mono);font-size:11px;color:var(--text-3);letter-spacing:.04em}
+  .footer-meta{margin-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;font-family:var(--font-mono);font-size:12px;color:var(--text-3)}
+  .footer-meta a{text-decoration:none;color:var(--text-3);cursor:pointer}.footer-meta a:hover{color:var(--text-2)}
+
+  .reveal{opacity:0;transform:translateY(16px);animation:rise .8s var(--ease) forwards}
+  @keyframes rise{to{opacity:1;transform:none}}
+  .d1{animation-delay:.05s}.d2{animation-delay:.13s}.d3{animation-delay:.21s}.d4{animation-delay:.29s}.d5{animation-delay:.37s}
+  @media(prefers-reduced-motion:reduce){.reveal{animation:none;opacity:1;transform:none}.brand .dot{animation:none}.page.active{animation:none}.cmd .ccar{animation:none}}
+
+  @media(max-width:920px){.hero-grid,.platform-grid{grid-template-columns:1fr;gap:44px}.feat-strip,.cardgrid{grid-template-columns:1fr}}
+  @media(max-width:560px){.wrap{padding:0 18px}section{padding:64px 0}.modules-grid{grid-template-columns:1fr}.nav{height:auto;flex-direction:column;align-items:stretch;padding:12px 0;gap:10px}.contact-box{padding:40px 24px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <nav class="nav">
+      <a class="brand" data-tab="overview"><span class="dot"></span>QGO<span class="pre">Pre-release</span></a>
+      <ul class="tabs">
+        <li><a class="tab" data-tab="overview">Overview</a></li>
+        <li><a class="tab" data-tab="workspace">Workspace</a></li>
+        <li><a class="tab" data-tab="modules">Modules</a></li>
+        <li><a class="tab" data-tab="platform">Platform</a></li>
+        <li><a class="tab" data-tab="integrations">Integrations</a></li>
+        <li><a class="tab" data-tab="contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- ===== OVERVIEW ===== -->
+<div class="page" data-page="overview">
+  <section class="first">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <span class="eyebrow reveal d1">Cue-based production platform</span>
+          <h1 class="reveal d1">QGO</h1>
+          <h2 class="reveal d2">One cue system.<br><span class="muted">Multiple departments.</span></h2>
+          <p class="lede reveal d3">A cue-based production workspace for live shows, built around timing, notes, departments and synchronization.</p>
+          <div class="badge reveal d3"><span class="tick">&#9656;</span> Currently powered by <b>REAPER</b></div>
+          <div class="btn-row reveal d4">
+            <a class="btn btn-go" data-tab="workspace">See the workspace</a>
+            <a class="btn btn-ghost" data-tab="integrations">Roadmap</a>
+            <span class="tc-chip mono" id="tc">01:00:00:00</span>
+          </div>
+        </div>
+        <div class="appwin reveal d4">
+          <div class="appbar"><span class="tl"><i class="r"></i><i class="y"></i><i class="g"></i></span><span class="ttl">QGO — <b>Main Cue List</b></span><span class="eos"><span class="lamp"></span>EOS</span></div>
+          <div class="info"><span class="l">Marker List: <b>Act 1</b> *</span><span class="c">Cue 12.0</span><span class="rt">Markers: <b>8</b>&nbsp;&nbsp;Sel: <b>1</b></span></div>
+          <div class="tscroll">
+            <table class="cues">
+              <colgroup><col class="cn"><col class="cc"><col class="cnm"><col class="cnt"><col class="cf"><col class="cd"><col class="ccm"><col class="ct"><col class="cto"></colgroup>
+              <thead><tr><th class="n">#</th><th>Cue</th><th>Name</th><th>Notes</th><th>Fade</th><th>Delay</th><th>CMD</th><th>Timecode</th><th>TC</th></tr></thead>
+              <tbody>
+                <tr class="tcen"><td class="n">1</td><td class="c">10.0</td><td class="nm">Lights up — full stage</td><td class="nt">Top of show</td><td class="f">3.0</td><td class="d">0.0</td><td class="cm">Go 10</td><td class="t">01:00:04:00</td><td class="to">&#10004;</td></tr>
+                <tr class="tcen"><td class="n">2</td><td class="c">10.5</td><td class="nm">Music in — overture</td><td class="nt">playback A</td><td class="f">4.0</td><td class="d">0.0</td><td class="cm">Play A</td><td class="t">01:00:08:12</td><td class="to">&#10004;</td></tr>
+                <tr class="tcen"><td class="n">3</td><td class="c">11.0</td><td class="nm">Spot — narrator</td><td class="nt">follow SR</td><td class="f">2.0</td><td class="d">0.5</td><td class="cm">Go 11</td><td class="t">01:00:31:06</td><td class="to">&#10004;</td></tr>
+                <tr class="tcoff"><td class="n">4</td><td class="c">11.1</td><td class="nm">Screen content</td><td class="nt">loop until 12</td><td class="f">1.5</td><td class="d">0.0</td><td class="cm">Roll Clip 2</td><td class="t"></td><td class="to" style="color:var(--tcoff)">&#10006;</td></tr>
+                <tr class="tcen np"><td class="n">5</td><td class="c">12.0</td><td class="nm">Crossfade to scene 2</td><td class="nt">on cue line</td><td class="f">2.5</td><td class="d">0.0</td><td class="cm">Go 12</td><td class="t">01:01:12:18</td><td class="to">&#10004;</td></tr>
+                <tr class="tcen"><td class="n">6</td><td class="c cue-ind"><span class="cue-tri">&#9656;</span>12.1</td><td class="nm">— side booms</td><td class="nt">follow</td><td class="f">1.0</td><td class="d">0.0</td><td class="cm">Go 12.1</td><td class="t">01:01:14:00</td><td class="to">&#10004;</td></tr>
+                <tr class="tcen"><td class="n">7</td><td class="c">13.0</td><td class="nm">Blackout</td><td class="nt">end of act</td><td class="f">1.0</td><td class="d">0.0</td><td class="cm">Go 13</td><td class="t">01:02:05:11</td><td class="to">&#10004;</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="divider">
+    <div class="wrap">
+      <div class="sec-head"><span class="eyebrow">The cue table</span>
+        <div class="row"><h3>Everything is a cue</h3><span class="status now">Available · on REAPER</span></div>
+        <p>One ordered list, shared across every department. Numbered, timed and synchronized — the single source of truth from rehearsal to show.</p>
+      </div>
+      <div class="feat-strip reveal d2">
+        <div class="feat"><div class="fn">01 · Cue</div><h5>Number it once</h5><p>whole.sub numbering keeps strict order. Insert between any two cues without renumbering the show.</p></div>
+        <div class="feat"><div class="fn">02 · Go</div><h5>Fire on time</h5><p>Fade, delay and timecode per cue. Trigger by call, by clock, or in sync with playback.</p></div>
+        <div class="feat"><div class="fn">03 · Show</div><h5>Everyone aligned</h5><p>Light, audio, video, stage and mechanics read from one shared list — no parallel spreadsheets.</p></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===== WORKSPACE ===== -->
+<div class="page" data-page="workspace">
+  <section class="first">
+    <div class="wrap">
+      <div class="sec-head"><span class="eyebrow">The workspace</span>
+        <div class="row"><h3>Built to be lived in</h3><span class="status now">Table available</span><span class="status dev">Dock in development</span></div>
+        <p>The cue table is the surface you work on all day. Around it, a bottom dock turns the window into the control room — command line, AI assistant, activity log and history, all docking into the table.</p>
+      </div>
+
+      <div class="cardgrid reveal d2" style="margin-bottom:48px">
+        <div class="fcard">
+          <h4>Spreadsheet workflow <span class="status now">Available</span></h4>
+          <p>Edit like a sheet — without leaving the timeline.</p>
+          <ul>
+            <li>Cell selection &amp; rectangle ranges across rows and columns</li>
+            <li>Inline edit with Enter / Tab navigation</li>
+            <li>Copy / paste round-trips with Numbers &amp; Excel (TSV)</li>
+            <li>Paste maps by column, even after reordering</li>
+          </ul>
+        </div>
+        <div class="fcard">
+          <h4>The bottom dock <span class="status dev">In development</span></h4>
+          <p>Tools dock as tabs and expand into the table.</p>
+          <ul>
+            <li>System Monitor — unified activity log of every mutation</li>
+            <li>History — undo steps with multi-step revert</li>
+            <li>Eos Sync — push log to the lighting console</li>
+            <li>Assistant — an AI that acts on cues for you</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="appwin reveal d3">
+        <div class="appbar"><span class="tl"><i class="r"></i><i class="y"></i><i class="g"></i></span><span class="ttl">QGO — <b>Main Cue List</b></span><span class="eos"><span class="lamp"></span>EOS</span></div>
+        <div class="dock">
+          <div class="dock-body">
+            <div class="chat-meta">orchestrator core · <span class="ag">plan</span><span class="ag">apply</span><span class="ag">verify</span></div>
+            <div class="msg u">Insert a sub-cue after 12.0 for the side booms</div>
+            <div class="msg a">Added <b>cue 12.1 — side booms</b>, fade 1.0, at sub-level. Order preserved.<span class="act">Inspector · insert 12.1 &#10003;</span></div>
+            <div class="msg u">Now push the act to Eos</div>
+            <div class="msg a">Pushed <b>8 cues</b> (10.0–13.0) to Eos — 0 errors.<span class="act">Eos · push 8 &#10003;</span></div>
+          </div>
+          <div class="dtabs">
+            <span class="dtab"><span class="dt"></span>History</span>
+            <span class="dtab"><span class="dt"></span>System Monitor</span>
+            <span class="dtab"><span class="dt"></span>Eos Sync</span>
+            <span class="dtab on"><span class="dt"></span>Assistant</span>
+          </div>
+          <div class="cmd">
+            <span class="p">&#10022;</span>
+            <span class="mode"><span>CMD</span><span class="on">&#10022; AI</span></span>
+            <span class="fld">add a blackout cue after 13.0<span class="ccar"></span></span>
+            <span class="send">Send</span>
+          </div>
+        </div>
+      </div>
+      <p class="mono" style="color:var(--text-3);font-size:11.5px;margin-top:14px;letter-spacing:.04em">The dock, command line and AI assistant are in development — shown here as the target design.</p>
+    </div>
+  </section>
+</div>
+
+<!-- ===== MODULES ===== -->
+<div class="page" data-page="modules">
+  <section class="first">
+    <div class="wrap">
+      <div class="sec-head"><span class="eyebrow">Departments</span>
+        <div class="row"><h3>Built for every department</h3><span class="status soon">Module pages — planned</span></div>
+        <p>One shared cue system; focused, role-specific tools per department — like one brand with industry-specific editions. The shared cue table works today; department-specific tooling is on the roadmap.</p>
+      </div>
+      <div class="modules-grid reveal d2">
+        <a class="module" data-tab="m-light"><div class="mt"><span class="qn">M 01</span><span class="status soon">Planned</span></div><h4>Light</h4><p>Cue lists, timing, console workflows.</p><span class="arrow">Open &#8594;</span></a>
+        <a class="module" data-tab="m-audio"><div class="mt"><span class="qn">M 02</span><span class="status soon">Planned</span></div><h4>Audio</h4><p>Playback, timelines, routing and cue sync.</p><span class="arrow">Open &#8594;</span></a>
+        <a class="module" data-tab="m-video"><div class="mt"><span class="qn">M 03</span><span class="status soon">Planned</span></div><h4>Video</h4><p>Media servers, content cues and visual timing.</p><span class="arrow">Open &#8594;</span></a>
+        <a class="module" data-tab="m-stage"><div class="mt"><span class="qn">M 04</span><span class="status soon">Planned</span></div><h4>Stage</h4><p>Calling scripts, notes, departments and reports.</p><span class="arrow">Open &#8594;</span></a>
+        <a class="module" data-tab="m-mechanics"><div class="mt"><span class="qn">M 05</span><span class="status soon">Planned</span></div><h4>Mechanics</h4><p>Automation cues, movement notes and safety timing.</p><span class="arrow">Open &#8594;</span></a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===== MODULE SUBPAGES ===== -->
+<div class="page" data-page="m-light"><section class="first"><div class="wrap">
+  <a class="back" data-tab="modules">&#8592; Modules</a>
+  <div class="sec-head" style="margin-top:24px"><span class="eyebrow">Module 01</span><div class="row"><h3>Light</h3><span class="status soon">Planned</span></div>
+  <p>Lighting works straight from the shared cue table — cue numbers, fades, delays and console commands per cue, pushed to the desk. A dedicated Light edition will add console-aware tooling on top.</p></div>
+  <div class="cardgrid"><div class="fcard"><h4>From the cue table today</h4><ul><li>Per-cue fade &amp; delay</li><li>Console command (CMD) field</li><li>Timecode-driven firing</li><li>Eos push (in development)</li></ul></div>
+  <div class="fcard"><h4>Planned for Light</h4><ul><li>Console-aware cue presets</li><li>Group / submaster awareness</li><li>Two-way sync with the desk</li><li>MA &amp; EOS adapters</li></ul></div></div>
+</div></section></div>
+
+<div class="page" data-page="m-audio"><section class="first"><div class="wrap">
+  <a class="back" data-tab="modules">&#8592; Modules</a>
+  <div class="sec-head" style="margin-top:24px"><span class="eyebrow">Module 02</span><div class="row"><h3>Audio</h3><span class="status soon">Planned</span></div>
+  <p>Audio playback rides the same timeline and cue list — tracks, routing and cue-synced playback. A dedicated Audio edition will deepen routing and playback control.</p></div>
+  <div class="cardgrid"><div class="fcard"><h4>From the cue table today</h4><ul><li>Cue-synced playback markers</li><li>Fade / delay per cue</li><li>Notes &amp; calling per cue</li><li>Timeline transport (REAPER)</li></ul></div>
+  <div class="fcard"><h4>Planned for Audio</h4><ul><li>Routing &amp; bus awareness</li><li>Multi-track cue playback</li><li>QLab bridge</li><li>Show-file portability</li></ul></div></div>
+</div></section></div>
+
+<div class="page" data-page="m-video"><section class="first"><div class="wrap">
+  <a class="back" data-tab="modules">&#8592; Modules</a>
+  <div class="sec-head" style="margin-top:24px"><span class="eyebrow">Module 03</span><div class="row"><h3>Video</h3><span class="status soon">Planned</span></div>
+  <p>Video content cues live in the same list — content rolls, screens and visual timing aligned to the show clock. A dedicated Video edition will add media-server control.</p></div>
+  <div class="cardgrid"><div class="fcard"><h4>From the cue table today</h4><ul><li>Content cues with timecode</li><li>Per-cue command field</li><li>Notes &amp; loop annotations</li><li>Shared ordering with all depts</li></ul></div>
+  <div class="fcard"><h4>Planned for Video</h4><ul><li>Media-server cue control</li><li>Resolume bridge</li><li>Layer / screen targeting</li><li>Preview thumbnails</li></ul></div></div>
+</div></section></div>
+
+<div class="page" data-page="m-stage"><section class="first"><div class="wrap">
+  <a class="back" data-tab="modules">&#8592; Modules</a>
+  <div class="sec-head" style="margin-top:24px"><span class="eyebrow">Module 04</span><div class="row"><h3>Stage</h3><span class="status soon">Planned</span></div>
+  <p>Stage management calls the show from the same cue list — calling scripts, standbys, notes and reports. A dedicated Stage edition will add calling and reporting tooling.</p></div>
+  <div class="cardgrid"><div class="fcard"><h4>From the cue table today</h4><ul><li>Calling notes per cue</li><li>Standby annotations</li><li>One shared, ordered list</li><li>Marker list export</li></ul></div>
+  <div class="fcard"><h4>Planned for Stage</h4><ul><li>Calling script view</li><li>Standby / GO prompting</li><li>Show reports &amp; PDFs</li><li>Department filtering</li></ul></div></div>
+</div></section></div>
+
+<div class="page" data-page="m-mechanics"><section class="first"><div class="wrap">
+  <a class="back" data-tab="modules">&#8592; Modules</a>
+  <div class="sec-head" style="margin-top:24px"><span class="eyebrow">Module 05</span><div class="row"><h3>Mechanics</h3><span class="status soon">Planned</span></div>
+  <p>Automation and movement cues share the list — deck travel, flys and safety timing. A dedicated Mechanics edition will add motion and safety-aware tooling.</p></div>
+  <div class="cardgrid"><div class="fcard"><h4>From the cue table today</h4><ul><li>Movement cues with delay</li><li>Safety notes per cue</li><li>Timecode-aligned timing</li><li>Strict cue ordering</li></ul></div>
+  <div class="fcard"><h4>Planned for Mechanics</h4><ul><li>Automation cue control</li><li>Motion profiles &amp; limits</li><li>Safety interlock awareness</li><li>Movement preview</li></ul></div></div>
+</div></section></div>
+
+<!-- ===== PLATFORM ===== -->
+<div class="page" data-page="platform">
+  <section class="first">
+    <div class="wrap">
+      <div class="platform-grid">
+        <div class="platform-copy reveal d1">
+          <span class="eyebrow">Foundation</span>
+          <div class="row" style="display:flex;align-items:center;gap:14px;margin:16px 0 22px"><h3 style="font-family:var(--font-display);font-weight:800;font-size:clamp(30px,5vw,46px);letter-spacing:-.03em;line-height:1.05;margin:0">Current platform</h3><span class="status now">Available</span></div>
+          <p>QGO is becoming a standalone application, while REAPER currently provides the working platform: timeline, media, markers, transport and project infrastructure.</p>
+          <div class="platform-note">REAPER is not an integration. It is the <b>platform layer</b> QGO is built on today — the runtime beneath the cue system.</div>
+        </div>
+        <div class="stack reveal d2">
+          <div class="layer layer-app"><div class="lt">Application <span class="status dev" style="margin-left:8px">Standalone in development</span></div><div class="ln"><span class="dot"></span>QGO</div><div class="ls">Cue system · departments · timing · notes · synchronization</div></div>
+          <div class="connector"><span class="line"></span>runs on</div>
+          <div class="layer layer-platform"><div class="lt">Platform layer</div><div class="ln">REAPER</div><div class="ls">Timeline · Media · Markers · Transport · Project infrastructure</div></div>
+        </div>
+      </div>
+      <div class="cardgrid reveal d3" style="margin-top:48px">
+        <div class="fcard"><h4>What the platform provides</h4><ul><li>Timeline &amp; transport</li><li>Media engine &amp; playback</li><li>Markers &amp; regions</li><li>Project file &amp; state</li><li>Audio routing infrastructure</li></ul></div>
+        <div class="fcard"><h4>What QGO adds on top</h4><ul><li>Cue identity &amp; strict ordering</li><li>Department-aware cue table</li><li>Fade · delay · command · notes</li><li>Timecode-driven synchronization</li><li>Reports &amp; calling workflow</li></ul></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===== INTEGRATIONS ===== -->
+<div class="page" data-page="integrations">
+  <section class="first">
+    <div class="wrap">
+      <div class="sec-head"><span class="eyebrow">Roadmap</span>
+        <div class="row"><h3>Future integrations</h3><span class="status dev">Eos push in development</span><span class="status soon">Others planned</span></div>
+        <p>Optional modules and protocol bridges to connect QGO with the consoles, media servers and timing systems you already run.</p>
+      </div>
+      <div class="int-cat reveal d1"><div class="ch"><h4>Lighting consoles</h4><span class="cn">— 04 systems</span></div><div class="tags"><span class="tag">MA2</span><span class="tag">MA3</span><span class="tag">EOS</span><span class="tag">Avolites</span></div></div>
+      <div class="int-cat reveal d2"><div class="ch"><h4>Media &amp; playback</h4><span class="cn">— 02 systems</span></div><div class="tags"><span class="tag">QLab</span><span class="tag">Resolume</span></div></div>
+      <div class="int-cat reveal d3"><div class="ch"><h4>Protocols &amp; sync</h4><span class="cn">— 03 bridges</span></div><div class="tags"><span class="tag">OSC</span><span class="tag">MIDI</span><span class="tag">Timecode</span></div></div>
+    </div>
+  </section>
+</div>
+
+<!-- ===== CONTACT ===== -->
+<div class="page" data-page="contact">
+  <section class="first">
+    <div class="wrap">
+      <div class="contact-box reveal d1">
+        <span class="eyebrow" style="justify-content:center;display:inline-flex">Get in touch</span>
+        <h3 style="margin-top:16px">Bring QGO to your show</h3>
+        <p>QGO is in active development. Reach out for early access, pilot productions, or to follow the roadmap as departments and integrations come online.</p>
+        <a class="mail" href="mailto:hello@qgo.show">hello@qgo.show</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">qgo<span>.show</span></div>
+      <div class="footer-tag"><span>Cue.</span><span class="seq">·</span><span>Go.</span><span class="seq">·</span><span>Show.</span></div>
+    </div>
+    <div class="legend">
+      <span class="lk">Status key:</span>
+      <span class="status now">Available</span><span class="lk">working today (on REAPER)</span>
+      <span class="status dev">In development</span><span class="lk">being built</span>
+      <span class="status soon">Planned</span><span class="lk">on the roadmap</span>
+    </div>
+    <div class="footer-meta">
+      <span>QGO — cue-based production platform · currently powered by REAPER · pre-release</span>
+      <span><a data-tab="overview">Overview</a> · <a data-tab="workspace">Workspace</a> · <a data-tab="modules">Modules</a> · <a data-tab="platform">Platform</a> · <a data-tab="integrations">Integrations</a> · <a data-tab="contact">Contact</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var tabs=document.querySelectorAll('[data-tab]');
+  var pages=document.querySelectorAll('[data-page]');
+  function show(id){
+    var found=false;
+    pages.forEach(function(p){var on=p.dataset.page===id;p.classList.toggle('active',on);if(on)found=true;});
+    if(!found){show('overview');return;}
+    var topTab=(id.indexOf('m-')===0)?'modules':id;
+    document.querySelectorAll('.tab').forEach(function(t){t.classList.toggle('active',t.dataset.tab===topTab);});
+    var cur=document.querySelector('[data-page="'+id+'"]');
+    if(cur){cur.querySelectorAll('.reveal').forEach(function(el){el.style.animation='none';void el.offsetWidth;el.style.animation='';});}
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  tabs.forEach(function(t){t.addEventListener('click',function(e){e.preventDefault();var id=t.dataset.tab;if(history.replaceState)history.replaceState(null,'','#'+id);else location.hash=id;show(id);});});
+  var initial=(location.hash||'').replace('#','')||'overview';
+  show(initial);
+  window.addEventListener('hashchange',function(){show((location.hash||'').replace('#','')||'overview');});
+
+  // live timecode @25fps
+  var tcEl=document.getElementById('tc');
+  if(tcEl){
+    var f=0,base=Date.now();
+    setInterval(function(){
+      var total=Math.floor((Date.now()-base)/40)+90000; // start ~ 01:00:00:00
+      var ff=total%25, s=Math.floor(total/25)%60, m=Math.floor(total/1500)%60, h=Math.floor(total/90000)%24;
+      function p(n){return (n<10?'0':'')+n;}
+      tcEl.textContent=p(h)+':'+p(m)+':'+p(s)+':'+p(ff);
+    },40);
+  }
+})();
+</script>
+</body>
+</html>
