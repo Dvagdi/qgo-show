@@ -217,37 +217,36 @@
 <header>
   <div class="wrap">
     <nav class="nav">
-      <a class="brand" data-tab="overview"><span class="dot"></span>QGO<span class="pre">Pre-release</span></a>
+      <a class="brand" href="#top"><span class="dot"></span>QGO<span class="pre">Pre-release</span></a>
       <ul class="tabs">
-        <li><a class="tab" data-tab="overview">Overview</a></li>
-        <li><a class="tab" data-tab="workspace">Workspace</a></li>
-        <li><a class="tab" data-tab="modules">Modules</a></li>
-        <li><a class="tab" data-tab="platform">Platform</a></li>
-        <li><a class="tab" data-tab="integrations">Integrations</a></li>
-        <li><a class="tab" data-tab="contact">Contact</a></li>
+        <li><a class="tab" href="#what">What it does</a></li>
+        <li><a class="tab" href="#download">Download</a></li>
+        <li><a class="tab" href="#pricing">Pricing</a></li>
+        <li><a class="tab" href="#platform">Platform</a></li>
+        <li><a class="tab" href="#help">Help</a></li>
+        <li><a class="tab" href="#contact">Contact</a></li>
       </ul>
     </nav>
   </div>
 </header>
 
-<!-- ===== OVERVIEW ===== -->
-<div class="page" data-page="overview">
-  <section class="first">
-    <div class="wrap">
-      <div class="hero-grid">
-        <div>
-          <span class="eyebrow reveal d1">Cue-based production platform</span>
-          <h1 class="reveal d1">QGO</h1>
-          <h2 class="reveal d2">One cue system.<br><span class="muted">Multiple departments.</span></h2>
-          <p class="lede reveal d3">A cue-based production workspace for live shows, built around timing, notes, departments and synchronization.</p>
-          <div class="badge reveal d3"><span class="tick">&#9656;</span> Currently powered by <b>REAPER</b></div>
-          <div class="btn-row reveal d4">
-            <a class="btn btn-go" data-tab="workspace">See the workspace</a>
-            <a class="btn btn-ghost" data-tab="integrations">Roadmap</a>
-            <span class="tc-chip mono" id="tc">01:00:00:00</span>
-          </div>
+<div id="top"></div>
+<section class="first">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <span class="eyebrow reveal d1">Cue lists for live shows</span>
+        <h1 class="reveal d1">QGO</h1>
+        <h2 class="reveal d2">One cue system.<br><span class="muted">Light and sound in sync.</span></h2>
+        <p class="lede reveal d3">QGO is a macOS cue-list workspace for theatre and concert work. Write your show once — your lighting console (ETC Eos, grandMA3) and audio timeline (REAPER) follow the same cues, from one table, in sync.</p>
+        <div class="badge reveal d3"><span class="tick">&#9656;</span> Audio playback powered by <b>REAPER</b></div>
+        <div class="btn-row reveal d4">
+          <a class="btn btn-go" href="#download">Download</a>
+          <a class="btn btn-ghost" href="#pricing">Pricing</a>
+          <span class="tc-chip mono" id="tc">01:00:00:00</span>
         </div>
-        <div class="appwin reveal d4">
+      </div>
+      <div class="appwin reveal d4">
           <div class="appbar"><span class="tl"><i class="r"></i><i class="y"></i><i class="g"></i></span><span class="ttl">QGO — <b>Main Cue List</b></span><span class="eos"><span class="lamp"></span>EOS</span></div>
           <div class="info"><span class="l">Marker List: <b>Act 1</b> *</span><span class="c">Cue 12.0</span><span class="rt">Markers: <b>8</b>&nbsp;&nbsp;Sel: <b>1</b></span></div>
           <div class="tscroll">
@@ -266,244 +265,147 @@
             </table>
           </div>
         </div>
+    </div>
+  </div>
+</section>
+
+<section id="what">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">What it does</span>
+      <h3>The cue list is the show</h3>
+    </div>
+    <div class="cardgrid">
+      <div class="fcard">
+        <h5>One source of truth</h5>
+        <p>Numbers, names, fades, delays, notes, timecode — every cue lives in one table, in one file. Custom columns for anything your production tracks. Undo everywhere. Nothing hides in a console you can&rsquo;t read.</p>
+      </div>
+      <div class="fcard">
+        <h5>Console sync &mdash; both directions</h5>
+        <p>Send your cues to ETC Eos or grandMA3. Pull the operator&rsquo;s edits back. Compare the two worlds side by side and reconcile them cell by cell — nothing is ever overwritten silently.</p>
+      </div>
+      <div class="fcard">
+        <h5>Audio follows the cues</h5>
+        <p>QGO drives REAPER as its audio timeline: markers mirror your cue list, the playhead follows your selection, and timecode feeds the console. One push — everything lines up.</p>
+      </div>
+      <div class="fcard">
+        <h5>Verified, not assumed</h5>
+        <p>Every write to a console is read back and confirmed. If a cue didn&rsquo;t land, QGO says so — precisely which one and why. No green checkmarks over a broken sync.</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section class="divider">
-    <div class="wrap">
-      <div class="sec-head"><span class="eyebrow">The cue table</span>
-        <div class="row"><h3>Everything is a cue</h3><span class="status now">Available · on REAPER</span></div>
-        <p>One ordered list, shared across every department. Numbered, timed and synchronized — the single source of truth from rehearsal to show.</p>
+<section id="download">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Download</span>
+      <h3>Pre-release</h3>
+    </div>
+    <p class="lede">QGO is in live production testing right now. The public beta for macOS is being prepared — signed, notarized, one download.</p>
+    <p style="margin-top:18px"><span class="status dev">Beta in preparation</span></p>
+    <p style="margin-top:22px;color:var(--text-2)">Want in early? Write to <a href="mailto:hello@qgo.show?subject=QGO%20beta">hello@qgo.show</a> — early-access builds go out to pilot productions first.</p>
+    <p style="margin-top:26px;font-family:var(--font-mono);font-size:12px;color:var(--text-3)">Requirements: macOS &middot; REAPER (free to try) for audio &middot; ETC Eos or grandMA3 optional, for console sync</p>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Pricing</span>
+      <h3>The core is free</h3>
+    </div>
+    <div class="cardgrid">
+      <div class="fcard">
+        <h5>Free &mdash; forever</h5>
+        <p>The full cue-list workspace: editing, validation, custom columns, saving and recovery, REAPER playback link. Everything you need to build and run a show from QGO.</p>
+        <p style="margin-top:12px"><span class="status now">Included</span></p>
       </div>
-      <div class="feat-strip reveal d2">
-        <div class="feat"><div class="fn">01 · Cue</div><h5>Number it once</h5><p>whole.sub numbering keeps strict order. Insert between any two cues without renumbering the show.</p></div>
-        <div class="feat"><div class="fn">02 · Go</div><h5>Fire on time</h5><p>Fade, delay and timecode per cue. Trigger by call, by clock, or in sync with playback.</p></div>
-        <div class="feat"><div class="fn">03 · Show</div><h5>Everyone aligned</h5><p>Light, audio, video, stage and mechanics read from one shared list — no parallel spreadsheets.</p></div>
+      <div class="fcard">
+        <h5>Console sync modules &mdash; subscription</h5>
+        <p>Two-way sync with ETC Eos and grandMA3: send, get, compare, live following, timecode. Per-module subscription. Final pricing will be announced at release.</p>
+        <p style="margin-top:12px"><span class="status dev">Pricing at release</span></p>
       </div>
     </div>
-  </section>
-</div>
+  </div>
+</section>
 
-<!-- ===== WORKSPACE ===== -->
-<div class="page" data-page="workspace">
-  <section class="first">
-    <div class="wrap">
-      <div class="sec-head"><span class="eyebrow">The workspace</span>
-        <div class="row"><h3>Built to be lived in</h3><span class="status now">Table available</span><span class="status dev">Dock in development</span></div>
-        <p>The cue table is the surface you work on all day. Around it, a bottom dock turns the window into the control room — command line, AI assistant, activity log and history, all docking into the table.</p>
-      </div>
 
-      <div class="cardgrid reveal d2" style="margin-bottom:48px">
-        <div class="fcard">
-          <h4>Spreadsheet workflow <span class="status now">Available</span></h4>
-          <p>Edit like a sheet — without leaving the timeline.</p>
-          <ul>
-            <li>Cell selection &amp; rectangle ranges across rows and columns</li>
-            <li>Inline edit with Enter / Tab navigation</li>
-            <li>Copy / paste round-trips with Numbers &amp; Excel (TSV)</li>
-            <li>Paste maps by column, even after reordering</li>
-          </ul>
-        </div>
-        <div class="fcard">
-          <h4>The bottom dock <span class="status dev">In development</span></h4>
-          <p>Tools dock as tabs and expand into the table.</p>
-          <ul>
-            <li>System Monitor — unified activity log of every mutation</li>
-            <li>History — undo steps with multi-step revert</li>
-            <li>Eos Sync — push log to the lighting console</li>
-            <li>Assistant — an AI that acts on cues for you</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="appwin reveal d3">
-        <div class="appbar"><span class="tl"><i class="r"></i><i class="y"></i><i class="g"></i></span><span class="ttl">QGO — <b>Main Cue List</b></span><span class="eos"><span class="lamp"></span>EOS</span></div>
-        <div class="dock">
-          <div class="dock-body">
-            <div class="chat-meta">orchestrator core · <span class="ag">plan</span><span class="ag">apply</span><span class="ag">verify</span></div>
-            <div class="msg u">Insert a sub-cue after 12.0 for the side booms</div>
-            <div class="msg a">Added <b>cue 12.1 — side booms</b>, fade 1.0, at sub-level. Order preserved.<span class="act">Inspector · insert 12.1 &#10003;</span></div>
-            <div class="msg u">Now push the act to Eos</div>
-            <div class="msg a">Pushed <b>8 cues</b> (10.0–13.0) to Eos — 0 errors.<span class="act">Eos · push 8 &#10003;</span></div>
-          </div>
-          <div class="dtabs">
-            <span class="dtab"><span class="dt"></span>History</span>
-            <span class="dtab"><span class="dt"></span>System Monitor</span>
-            <span class="dtab"><span class="dt"></span>Eos Sync</span>
-            <span class="dtab on"><span class="dt"></span>Assistant</span>
-          </div>
-          <div class="cmd">
-            <span class="p">&#10022;</span>
-            <span class="mode"><span>CMD</span><span class="on">&#10022; AI</span></span>
-            <span class="fld">add a blackout cue after 13.0<span class="ccar"></span></span>
-            <span class="send">Send</span>
-          </div>
-        </div>
-      </div>
-      <p class="mono" style="color:var(--text-3);font-size:11.5px;margin-top:14px;letter-spacing:.04em">The dock, command line and AI assistant are in development — shown here as the target design.</p>
+<section id="platform">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Platform roadmap</span>
+      <h3>One cue system. Every department — in time.</h3>
+      <p style="margin-top:14px;color:var(--text-2)">QGO is built as a cue platform: what ships today for light and sound is the foundation the other departments will stand on. Here is the honest state of each.</p>
     </div>
-  </section>
-</div>
-
-<!-- ===== MODULES ===== -->
-<div class="page" data-page="modules">
-  <section class="first">
-    <div class="wrap">
-      <div class="sec-head"><span class="eyebrow">Departments</span>
-        <div class="row"><h3>Built for every department</h3><span class="status soon">Module pages — planned</span></div>
-        <p>One shared cue system; focused, role-specific tools per department — like one brand with industry-specific editions. The shared cue table works today; department-specific tooling is on the roadmap.</p>
+    <div class="cardgrid">
+      <div class="fcard">
+        <h5>Light</h5>
+        <p>Cue lists, timing, two-way console sync — ETC Eos and grandMA3.</p>
+        <p style="margin-top:12px"><span class="status now">Available</span></p>
       </div>
-      <div class="modules-grid reveal d2">
-        <a class="module" data-tab="m-light"><div class="mt"><span class="qn">M 01</span><span class="status soon">Planned</span></div><h4>Light</h4><p>Cue lists, timing, console workflows.</p><span class="arrow">Open &#8594;</span></a>
-        <a class="module" data-tab="m-audio"><div class="mt"><span class="qn">M 02</span><span class="status soon">Planned</span></div><h4>Audio</h4><p>Playback, timelines, routing and cue sync.</p><span class="arrow">Open &#8594;</span></a>
-        <a class="module" data-tab="m-video"><div class="mt"><span class="qn">M 03</span><span class="status soon">Planned</span></div><h4>Video</h4><p>Media servers, content cues and visual timing.</p><span class="arrow">Open &#8594;</span></a>
-        <a class="module" data-tab="m-stage"><div class="mt"><span class="qn">M 04</span><span class="status soon">Planned</span></div><h4>Stage</h4><p>Calling scripts, notes, departments and reports.</p><span class="arrow">Open &#8594;</span></a>
-        <a class="module" data-tab="m-mechanics"><div class="mt"><span class="qn">M 05</span><span class="status soon">Planned</span></div><h4>Mechanics</h4><p>Automation cues, movement notes and safety timing.</p><span class="arrow">Open &#8594;</span></a>
+      <div class="fcard">
+        <h5>Audio</h5>
+        <p>Playback, timelines and cue sync — today through REAPER; a native audio engine is on the long-term map.</p>
+        <p style="margin-top:12px"><span class="status now">Available via REAPER</span></p>
+      </div>
+      <div class="fcard">
+        <h5>Video</h5>
+        <p>Media servers, content cues and visual timing.</p>
+        <p style="margin-top:12px"><span class="status soon">Planned</span></p>
+      </div>
+      <div class="fcard">
+        <h5>Stage &amp; Mechanics</h5>
+        <p>Scenery moves, machinery cues, safety-aware timing.</p>
+        <p style="margin-top:12px"><span class="status soon">Planned</span></p>
       </div>
     </div>
-  </section>
-</div>
+    <p style="margin-top:26px;font-family:var(--font-mono);font-size:12px;color:var(--text-3)">Future integrations: lighting consoles (MA2 &middot; Avolites) &middot; media &amp; playback (QLab &middot; Resolume) &middot; protocols (OSC &middot; MIDI &middot; Timecode) &middot; multi-operator shows</p>
+  </div>
+</section>
 
-<!-- ===== MODULE SUBPAGES ===== -->
-<div class="page" data-page="m-light"><section class="first"><div class="wrap">
-  <a class="back" data-tab="modules">&#8592; Modules</a>
-  <div class="sec-head" style="margin-top:24px"><span class="eyebrow">Module 01</span><div class="row"><h3>Light</h3><span class="status soon">Planned</span></div>
-  <p>Lighting works straight from the shared cue table — cue numbers, fades, delays and console commands per cue, pushed to the desk. A dedicated Light edition will add console-aware tooling on top.</p></div>
-  <div class="cardgrid"><div class="fcard"><h4>From the cue table today</h4><ul><li>Per-cue fade &amp; delay</li><li>Console command (CMD) field</li><li>Timecode-driven firing</li><li>Eos push (in development)</li></ul></div>
-  <div class="fcard"><h4>Planned for Light</h4><ul><li>Console-aware cue presets</li><li>Group / submaster awareness</li><li>Two-way sync with the desk</li><li>MA &amp; EOS adapters</li></ul></div></div>
-</div></section></div>
-
-<div class="page" data-page="m-audio"><section class="first"><div class="wrap">
-  <a class="back" data-tab="modules">&#8592; Modules</a>
-  <div class="sec-head" style="margin-top:24px"><span class="eyebrow">Module 02</span><div class="row"><h3>Audio</h3><span class="status soon">Planned</span></div>
-  <p>Audio playback rides the same timeline and cue list — tracks, routing and cue-synced playback. A dedicated Audio edition will deepen routing and playback control.</p></div>
-  <div class="cardgrid"><div class="fcard"><h4>From the cue table today</h4><ul><li>Cue-synced playback markers</li><li>Fade / delay per cue</li><li>Notes &amp; calling per cue</li><li>Timeline transport (REAPER)</li></ul></div>
-  <div class="fcard"><h4>Planned for Audio</h4><ul><li>Routing &amp; bus awareness</li><li>Multi-track cue playback</li><li>QLab bridge</li><li>Show-file portability</li></ul></div></div>
-</div></section></div>
-
-<div class="page" data-page="m-video"><section class="first"><div class="wrap">
-  <a class="back" data-tab="modules">&#8592; Modules</a>
-  <div class="sec-head" style="margin-top:24px"><span class="eyebrow">Module 03</span><div class="row"><h3>Video</h3><span class="status soon">Planned</span></div>
-  <p>Video content cues live in the same list — content rolls, screens and visual timing aligned to the show clock. A dedicated Video edition will add media-server control.</p></div>
-  <div class="cardgrid"><div class="fcard"><h4>From the cue table today</h4><ul><li>Content cues with timecode</li><li>Per-cue command field</li><li>Notes &amp; loop annotations</li><li>Shared ordering with all depts</li></ul></div>
-  <div class="fcard"><h4>Planned for Video</h4><ul><li>Media-server cue control</li><li>Resolume bridge</li><li>Layer / screen targeting</li><li>Preview thumbnails</li></ul></div></div>
-</div></section></div>
-
-<div class="page" data-page="m-stage"><section class="first"><div class="wrap">
-  <a class="back" data-tab="modules">&#8592; Modules</a>
-  <div class="sec-head" style="margin-top:24px"><span class="eyebrow">Module 04</span><div class="row"><h3>Stage</h3><span class="status soon">Planned</span></div>
-  <p>Stage management calls the show from the same cue list — calling scripts, standbys, notes and reports. A dedicated Stage edition will add calling and reporting tooling.</p></div>
-  <div class="cardgrid"><div class="fcard"><h4>From the cue table today</h4><ul><li>Calling notes per cue</li><li>Standby annotations</li><li>One shared, ordered list</li><li>Marker list export</li></ul></div>
-  <div class="fcard"><h4>Planned for Stage</h4><ul><li>Calling script view</li><li>Standby / GO prompting</li><li>Show reports &amp; PDFs</li><li>Department filtering</li></ul></div></div>
-</div></section></div>
-
-<div class="page" data-page="m-mechanics"><section class="first"><div class="wrap">
-  <a class="back" data-tab="modules">&#8592; Modules</a>
-  <div class="sec-head" style="margin-top:24px"><span class="eyebrow">Module 05</span><div class="row"><h3>Mechanics</h3><span class="status soon">Planned</span></div>
-  <p>Automation and movement cues share the list — deck travel, flys and safety timing. A dedicated Mechanics edition will add motion and safety-aware tooling.</p></div>
-  <div class="cardgrid"><div class="fcard"><h4>From the cue table today</h4><ul><li>Movement cues with delay</li><li>Safety notes per cue</li><li>Timecode-aligned timing</li><li>Strict cue ordering</li></ul></div>
-  <div class="fcard"><h4>Planned for Mechanics</h4><ul><li>Automation cue control</li><li>Motion profiles &amp; limits</li><li>Safety interlock awareness</li><li>Movement preview</li></ul></div></div>
-</div></section></div>
-
-<!-- ===== PLATFORM ===== -->
-<div class="page" data-page="platform">
-  <section class="first">
-    <div class="wrap">
-      <div class="platform-grid">
-        <div class="platform-copy reveal d1">
-          <span class="eyebrow">Foundation</span>
-          <div class="row" style="display:flex;align-items:center;gap:14px;margin:16px 0 22px"><h3 style="font-family:var(--font-display);font-weight:800;font-size:clamp(30px,5vw,46px);letter-spacing:-.03em;line-height:1.05;margin:0">Current platform</h3><span class="status now">Available</span></div>
-          <p>QGO is becoming a standalone application, while REAPER currently provides the working platform: timeline, media, markers, transport and project infrastructure.</p>
-          <div class="platform-note">REAPER is not an integration. It is the <b>platform layer</b> QGO is built on today — the runtime beneath the cue system.</div>
-        </div>
-        <div class="stack reveal d2">
-          <div class="layer layer-app"><div class="lt">Application <span class="status dev" style="margin-left:8px">Standalone in development</span></div><div class="ln"><span class="dot"></span>QGO</div><div class="ls">Cue system · departments · timing · notes · synchronization</div></div>
-          <div class="connector"><span class="line"></span>runs on</div>
-          <div class="layer layer-platform"><div class="lt">Platform layer</div><div class="ln">REAPER</div><div class="ls">Timeline · Media · Markers · Transport · Project infrastructure</div></div>
-        </div>
-      </div>
-      <div class="cardgrid reveal d3" style="margin-top:48px">
-        <div class="fcard"><h4>What the platform provides</h4><ul><li>Timeline &amp; transport</li><li>Media engine &amp; playback</li><li>Markers &amp; regions</li><li>Project file &amp; state</li><li>Audio routing infrastructure</li></ul></div>
-        <div class="fcard"><h4>What QGO adds on top</h4><ul><li>Cue identity &amp; strict ordering</li><li>Department-aware cue table</li><li>Fade · delay · command · notes</li><li>Timecode-driven synchronization</li><li>Reports &amp; calling workflow</li></ul></div>
-      </div>
+<section id="help">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Help</span>
+      <h3>Learn QGO</h3>
     </div>
-  </section>
-</div>
+    <p class="lede">The user manual is being written alongside the beta. Until it ships, questions go straight to a human: <a href="mailto:hello@qgo.show">hello@qgo.show</a>.</p>
+    
+  </div>
+</section>
 
-<!-- ===== INTEGRATIONS ===== -->
-<div class="page" data-page="integrations">
-  <section class="first">
-    <div class="wrap">
-      <div class="sec-head"><span class="eyebrow">Roadmap</span>
-        <div class="row"><h3>Future integrations</h3><span class="status dev">Eos push in development</span><span class="status soon">Others planned</span></div>
-        <p>Optional modules and protocol bridges to connect QGO with the consoles, media servers and timing systems you already run.</p>
-      </div>
-      <div class="int-cat reveal d1"><div class="ch"><h4>Lighting consoles</h4><span class="cn">— 04 systems</span></div><div class="tags"><span class="tag">MA2</span><span class="tag">MA3</span><span class="tag">EOS</span><span class="tag">Avolites</span></div></div>
-      <div class="int-cat reveal d2"><div class="ch"><h4>Media &amp; playback</h4><span class="cn">— 02 systems</span></div><div class="tags"><span class="tag">QLab</span><span class="tag">Resolume</span></div></div>
-      <div class="int-cat reveal d3"><div class="ch"><h4>Protocols &amp; sync</h4><span class="cn">— 03 bridges</span></div><div class="tags"><span class="tag">OSC</span><span class="tag">MIDI</span><span class="tag">Timecode</span></div></div>
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-box reveal d1">
+      <span class="eyebrow" style="justify-content:center;display:inline-flex">Get in touch</span>
+      <h3 style="margin-top:16px">Bring QGO to your show</h3>
+      <p>Early access, pilot productions, questions — one address, answered by the people who build it.</p>
+      <a class="mail" href="mailto:hello@qgo.show">hello@qgo.show</a>
     </div>
-  </section>
-</div>
-
-<!-- ===== CONTACT ===== -->
-<div class="page" data-page="contact">
-  <section class="first">
-    <div class="wrap">
-      <div class="contact-box reveal d1">
-        <span class="eyebrow" style="justify-content:center;display:inline-flex">Get in touch</span>
-        <h3 style="margin-top:16px">Bring QGO to your show</h3>
-        <p>QGO is in active development. Reach out for early access, pilot productions, or to follow the roadmap as departments and integrations come online.</p>
-        <a class="mail" href="mailto:hello@qgo.show">hello@qgo.show</a>
-      </div>
-    </div>
-  </section>
-</div>
+  </div>
+</section>
 
 <footer>
   <div class="wrap">
     <div class="footer-grid">
       <div class="footer-brand">qgo<span>.show</span></div>
-      <div class="footer-tag"><span>Cue.</span><span class="seq">·</span><span>Go.</span><span class="seq">·</span><span>Show.</span></div>
-    </div>
-    <div class="legend">
-      <span class="lk">Status key:</span>
-      <span class="status now">Available</span><span class="lk">working today (on REAPER)</span>
-      <span class="status dev">In development</span><span class="lk">being built</span>
-      <span class="status soon">Planned</span><span class="lk">on the roadmap</span>
+      <div class="footer-tag"><span>Cue.</span><span class="seq">&middot;</span><span>Go.</span><span class="seq">&middot;</span><span>Show.</span></div>
     </div>
     <div class="footer-meta">
-      <span>QGO — cue-based production platform · currently powered by REAPER · pre-release</span>
-      <span><a data-tab="overview">Overview</a> · <a data-tab="workspace">Workspace</a> · <a data-tab="modules">Modules</a> · <a data-tab="platform">Platform</a> · <a data-tab="integrations">Integrations</a> · <a data-tab="contact">Contact</a></span>
+      <span>&copy; QGO. Pre-release.</span>
+      <a href="mailto:hello@qgo.show">hello@qgo.show</a>
     </div>
   </div>
 </footer>
 
 <script>
 (function(){
-  var tabs=document.querySelectorAll('[data-tab]');
-  var pages=document.querySelectorAll('[data-page]');
-  function show(id){
-    var found=false;
-    pages.forEach(function(p){var on=p.dataset.page===id;p.classList.toggle('active',on);if(on)found=true;});
-    if(!found){show('overview');return;}
-    var topTab=(id.indexOf('m-')===0)?'modules':id;
-    document.querySelectorAll('.tab').forEach(function(t){t.classList.toggle('active',t.dataset.tab===topTab);});
-    var cur=document.querySelector('[data-page="'+id+'"]');
-    if(cur){cur.querySelectorAll('.reveal').forEach(function(el){el.style.animation='none';void el.offsetWidth;el.style.animation='';});}
-    window.scrollTo({top:0,behavior:'smooth'});
-  }
-  tabs.forEach(function(t){t.addEventListener('click',function(e){e.preventDefault();var id=t.dataset.tab;if(history.replaceState)history.replaceState(null,'','#'+id);else location.hash=id;show(id);});});
-  var initial=(location.hash||'').replace('#','')||'overview';
-  show(initial);
-  window.addEventListener('hashchange',function(){show((location.hash||'').replace('#','')||'overview');});
-
-  // live timecode @25fps
   var tcEl=document.getElementById('tc');
   if(tcEl){
-    var f=0,base=Date.now();
+    var base=Date.now();
     setInterval(function(){
-      var total=Math.floor((Date.now()-base)/40)+90000; // start ~ 01:00:00:00
+      var total=Math.floor((Date.now()-base)/40)+90000;
       var ff=total%25, s=Math.floor(total/25)%60, m=Math.floor(total/1500)%60, h=Math.floor(total/90000)%24;
       function p(n){return (n<10?'0':'')+n;}
       tcEl.textContent=p(h)+':'+p(m)+':'+p(s)+':'+p(ff);
@@ -511,5 +413,6 @@
   }
 })();
 </script>
+
 </body>
 </html>
