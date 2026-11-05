@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>QGO — Реквизиты</title>
+<meta name="description" content="Реквизиты индивидуального предпринимателя — правообладателя QGO." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0a0b0e; --surface:#111319; --line:rgba(255,255,255,0.065); --line-strong:rgba(255,255,255,0.12);
+    --text:#eceef3; --text-2:#99a0ad; --text-3:#5d6470; --go:#2fe08a; --go-line:rgba(47,224,138,0.4);
+    --font-display:'Archivo',sans-serif; --font-body:'IBM Plex Sans',sans-serif; --font-mono:'IBM Plex Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:820px;margin:0 auto;padding:0 32px}
+  a{color:var(--go);text-decoration:none} a:hover{text-decoration:underline}
+  header{padding:28px 0;border-bottom:1px solid var(--line)}
+  .brand{font-family:var(--font-display);font-weight:800;font-size:20px;letter-spacing:.02em;color:var(--text)}
+  .brand span{color:var(--go)}
+  main{padding:56px 0 72px}
+  .eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--go)}
+  h1{font-family:var(--font-display);font-weight:800;font-size:clamp(30px,5vw,44px);line-height:1.1;margin:14px 0 10px}
+  .lede{color:var(--text-2);max-width:60ch}
+  section{margin-top:44px}
+  h2{font-family:var(--font-mono);font-weight:500;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-2);margin-bottom:12px}
+  dl{display:grid;grid-template-columns:minmax(150px,220px) 1fr;border:1px solid var(--line-strong);border-radius:10px;background:var(--surface);overflow:hidden}
+  dt,dd{padding:13px 18px;border-top:1px solid var(--line)}
+  dt:first-of-type,dd:first-of-type{border-top:0}
+  dt{color:var(--text-2);font-size:14px}
+  dd{font-family:var(--font-mono);font-size:15px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+  .note{color:var(--text-3);font-size:13px;margin-top:12px}
+  footer{border-top:1px solid var(--line);padding:24px 0;color:var(--text-3);font-family:var(--font-mono);font-size:12px}
+  footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  @media (max-width:560px){
+    .wrap{padding:0 16px}
+    dl{grid-template-columns:1fr}
+    dd{border-top:0;padding-top:0}
+    dt{padding-bottom:2px}
+  }
+</style>
+</head>
+<body>
+<header><div class="wrap"><a class="brand" href="/">qgo<span>.show</span></a></div></header>
+<main>
+  <div class="wrap">
+    <span class="eyebrow">Реквизиты · Company details</span>
+    <h1>Реквизиты</h1>
+    <p class="lede">QGO разрабатывает и распространяет индивидуальный предприниматель. Эти реквизиты — для договоров, счетов и оплаты.</p>
+
+    <section>
+      <h2>Организация</h2>
+      <dl>
+        <dt>Наименование</dt><dd>Индивидуальный предприниматель Виноградов Иван Григорьевич</dd>
+        <dt>ИНН</dt><dd>771401101918</dd>
+        <dt>ОГРНИП</dt><dd>309774605500545</dd>
+        <dt>Город</dt><dd>г. Москва</dd>
+        <dt>Налоговый режим</dt><dd>АУСН</dd>
+      </dl>
+    </section>
+
+    <section>
+      <h2>Банк</h2>
+      <dl>
+        <dt>Банк</dt><dd>ПАО СБЕРБАНК</dd>
+        <dt>БИК</dt><dd>044525225</dd>
+        <dt>Корр. счёт</dt><dd>30101810400000000225</dd>
+        <dt>Расчётный счёт</dt><dd>40802810138040004602</dd>
+      </dl>
+    </section>
+
+    <section>
+      <h2>Связь</h2>
+      <dl>
+        <dt>E-mail</dt><dd><a href="mailto:hello@qgo.show">hello@qgo.show</a></dd>
+      </dl>
+    </section>
+  </div>
+</main>
+<footer><div class="wrap"><span>&copy; QGO</span><a href="/">qgo.show</a></div></footer>
+</body>
+</html>
